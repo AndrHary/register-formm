@@ -60,7 +60,6 @@ function App() {
                 <div className="fieldset-container">
                     <label htmlFor="confirmPassword">Confirm Password</label>
                     <input 
-                        className={ errors.messages.hasOwnProperty('password') ? "err" : null}
                         type="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
