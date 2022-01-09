@@ -1,0 +1,16 @@
+const express = require('express')
+const cors = require('cors')
+const dbConnect = require('./dbConnection.js')
+const {PORT, MONGO_STRING, SECRET} = require('../constants.js')
+const rouths = require('./rouths')
+const app = express()
+app.use(cors())
+app.use(express.json())
+app.use(rouths)
+dbConnect(MONGO_STRING)
+.then(() => {
+    app.listen(PORT, () => console.log(`The app is running on port ${PORT}`))
+})
+.catch(err => {
+    console.log(`Could not run; ${err.message}`)
+})

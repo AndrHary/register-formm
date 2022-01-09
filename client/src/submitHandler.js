@@ -1,14 +1,26 @@
-const submitHandler = (e, errors, setErrors, userData) => {
+import errorHandler from "./errorHandler"
+import regexes from "./regexes"
+const submitHandler = async (e, errors, setErrors, userData, setUser) => {
     e.preventDefault()
-    const errr = {}
-    if (userData.password !== userData.confirmPassword) {
-        errr.password = 'Missmatched password'
+    setErrors({})
+    let errr = errorHandler(regexes, userData)
+    if (Object.keys(errr).length > 0) {
+        setErrors({ messages: errr })
     }
-    if (userData.fullName.length < 5) {
-        errr.fullName = 'Invalid Name'
-    }
-    if (errr !== {}) {
-        setErrors({messages: errr})
+    if (Object.keys(errr).length === 0) {
+        let res = await fetch('http://localhost:3050/users/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        })
+        let resJson = await res.json()
+        if (resJson.message) {
+             setErrors({messages: {email: resJson.message}})
+        } else {
+           setUser(resJson)
+        }
     }
 }
 export default submitHandler
